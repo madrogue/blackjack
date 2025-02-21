@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackjack</title>
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+  <div id="game-container">
+    <div id="status">
+      <button id="bank" class="status-item icon-button"><i class="fas fa-sack-dollar"></i></button>
+      <div class="status-item"><span>Bank: </span><span id="amount-bank">$1000</span></div>
+      <div class="status-item"><span>Credits: </span><span id="amount-credits">$100</span></div>
+      <button id="settings-button" class="status-item icon-button"><i class="fas fa-cog"></i></button>
+    </div>
+    <div id="game-area">
+      <div id="dealer-area">
+        <div id="dealer-hands">
+          <div id="dealer-hand">
+            <div id="dealer-cards"></div>
+          </div>
+        </div>
+      </div>
+      <div id="player-area" class="bg-ellipse">
+        <div id="game-message"></div>
+        <div id="player-hands">
+          <div id="player-hand">
+            <div>Bet: <span id="player-bet">0</span></div>
+            <div id="player-cards"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="controls" class="control-panel">
+      <div id="bet-controls">
+        <button id="clear-bet-button" class="control-item control-button">Clear</button>
+        <div id="bet-buttons" class="control-item">
+          <button class="bet-button control-button poker-chip" data-bet="1">1</button>
+          <button class="bet-button control-button poker-chip" data-bet="2">2</button>
+          <button class="bet-button control-button poker-chip" data-bet="3">3</button>
+          <button class="bet-button control-button poker-chip" data-bet="5">5</button>
+          <button class="bet-button control-button poker-chip" data-bet="10">10</button>
+          <button class="bet-button control-button poker-chip" data-bet="20">20</button>
+        </div>
+        <button id="deal-button" class="control-item control-button">Deal</button>
+      </div>
+      <div id="game-controls" style="display: none;">
+        <!-- <button id="surrender-button" class="control-item control-button">Surrender</button> -->
+        <button id="split-button" class="control-item control-button" style="display: none;">Split</button>
+        <button id="stand-button" class="control-item control-button">Stand</button>
+        <button id="hit-button" class="control-item control-button">Hit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bank transfer popup -->
+  <div id="transfer-popup" class="popup">
+    <div class="popup-content">
+      <span class="close-button" id="close-popup">&times;</span>
+      <h2>Bank Transfer</h2>
+      <div class="transfer-container">
+        <div class="transfer-item">Bank: <span id="transfer-amount-bank">$1000</span></div>
+        <div class="transfer-controls">
+          <select id="transfer-amount">
+            <option value="1">$1</option>
+            <option value="5">$5</option>
+            <option value="10">$10</option>
+            <option value="20">$20</option>
+            <option value="50">$50</option>
+            <option value="100">$100</option>
+          </select>
+          <button id="to-credits-button" class="icon-button"><i class="fas fa-circle-chevron-right"></i></button>
+          <button id="to-bank-button" class="icon-button"><i class="fas fa-circle-chevron-left"></i></button>
+        </div>
+        <div class="transfer-item">Credits: <span id="transfer-amount-credits">$100</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings popup -->
+  <div id="settings-popup" class="popup">
+    <div class="popup-content">
+      <span class="close-button" id="close-settings-popup">&times;</span>
+      <h2>Settings</h2>
+      <div class="settings-container">
+        <div class="settings-item">
+          <label for="payout">Payout:</label>
+          <select id="payout">
+            <option value="6:5">6:5</option>
+            <option value="5:4">5:4</option>
+            <option value="4:3">4:3</option>
+            <option value="3:2">3:2</option>
+            <option value="2:1">2:1</option>
+            <option value="1:1">1:1</option>
+          </select>
+        </div>
+        <div class="settings-item">
+          <label for="min-bet">Minimum bet:</label>
+          <select id="min-bet">
+            <option value="1">$1</option>
+            <option value="2">$2</option>
+            <option value="3">$3</option>
+            <option value="5">$5</option>
+            <option value="10">$10</option>
+            <option value="15">$15</option>
+            <option value="20">$20</option>
+            <option value="25">$25</option>
+            <option value="30">$30</option>
+            <option value="40">$40</option>
+            <option value="50">$50</option>
+            <option value="100">$100</option>
+          </select>
+        </div>
+        <div class="settings-item">
+          <label for="decks">Decks:</label>
+          <select id="decks">
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+        <div class="settings-item">
+          <label for="surrender">Allow surrender:</label>
+          <input type="checkbox" id="surrender">
+        </div>
+        <div class="settings-item">
+          <label for="insurance">Prompt for insurance:</label>
+          <input type="checkbox" id="insurance">
+        </div>
+        <div class="settings-item">
+          <label for="show-dealer-image">Show dealer image:</label>
+          <input type="checkbox" id="show-dealer-image">
+        </div>
+        <button id="save-settings-button">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
