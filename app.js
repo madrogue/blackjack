@@ -21,15 +21,27 @@ function loadGameData() {
   bank = parseInt(localStorage.getItem('bank')) || 1000;
   credits = parseInt(localStorage.getItem('credits')) || 100;
   settings = JSON.parse(localStorage.getItem('settings')) || settings;
+  deck = JSON.parse(localStorage.getItem('deck')) || [];
+  playerHands = JSON.parse(localStorage.getItem('playerHands')) || [];
+  dealerHand = JSON.parse(localStorage.getItem('dealerHand')) || [];
+  betAmount = parseInt(localStorage.getItem('betAmount')) || 0;
+  cutCardPosition = parseInt(localStorage.getItem('cutCardPosition')) || null;
   updateStatusArea();
   updateSettingsUI();
   updateDealerImage();
+  updateUI();
+  checkSplitOption();
 }
 
 function saveGameData() {
   localStorage.setItem('bank', bank);
   localStorage.setItem('credits', credits);
   localStorage.setItem('settings', JSON.stringify(settings));
+  localStorage.setItem('deck', JSON.stringify(deck));
+  localStorage.setItem('playerHands', JSON.stringify(playerHands));
+  localStorage.setItem('dealerHand', JSON.stringify(dealerHand));
+  localStorage.setItem('betAmount', betAmount);
+  localStorage.setItem('cutCardPosition', cutCardPosition);
 }
 
 function createCardSVG(rank, suit) {
@@ -98,6 +110,7 @@ function startGame() {
   updateUI();
   toggleControls();
   checkSplitOption();
+  saveGameData();
 }
 
 function updateUI() {
@@ -182,6 +195,7 @@ function stand() {
     dealerSecondCardElement.classList.remove('face-down');
   }
   // Additional logic for the dealer's turn can be added here
+  saveGameData();
 }
 
 function toggleControls() {
@@ -220,6 +234,7 @@ function splitHand() {
     updateUI();
     updateStatusArea();
     checkSplitOption();
+    saveGameData();
   }
 }
 
@@ -244,6 +259,7 @@ function doubleDown(handIndex) {
     hand.cards.push(dealCard());
     updateUI();
     updateStatusArea();
+    saveGameData();
   }
 }
 
@@ -252,12 +268,14 @@ document.querySelectorAll('.bet-button').forEach(button => {
     const betValue = parseInt(button.getAttribute('data-bet'));
     betAmount += betValue;
     updateBetAmount();
+    saveGameData();
   });
 });
 
 document.getElementById('clear-bet-button').addEventListener('click', () => {
   betAmount = 0;
   updateBetAmount();
+  saveGameData();
 });
 
 document.getElementById('deal-button').addEventListener('click', startGame);
