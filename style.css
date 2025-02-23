@@ -48,12 +48,26 @@ h1 {
   background-color: #28a844;
 }
 
+.player-cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
 .card {
+  position: absolute;
   width: 100px;
   height: 140px;
   margin: 5px;
   border-radius: 10px;
 }
+
+/* .card:nth-child(n) {
+  top: calc((n - 1) * 20px);
+  left: calc((n - 1) * 50px);
+} */
 
 .face-down {
   background: url('assets/card-back.jpg') center center no-repeat;
